@@ -1,0 +1,46 @@
+body {
+  margin: 25px;
+  background-image: url('/static/img/satelliteBG.jpg');
+  background-size: 85%
+  background-repeat: no-repeat;
+  font-family: arial, sans-serif;
+  font-size: 14px;
+}
+
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.logotag{
+	color: white;
+	font-family: 'Titillium Web', sans-serif;
+	line-height: 10px;
+	float: right;
+	margin-top: 40px;
+	padding: 10px;
+
+}
+.logo{
+	float: left;
+	border-bottom: 50px;
+}
+
+
+.centerlogo{
+	text-align: center;
+}
+.container {position: absolute; margin: 0; margin-top:180px; width:100%; background: #f4f5f4; min-height: 600px; max-width: 1200px}
+
+.white-box { width: 900px; margin-top: 50px; margin-left: auto; margin-right: auto; background: rgba(255,255,255,0.9);
+padding: 30px;
+-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+-moz-box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+-ms-border-radius: 5px;
+-o-border-radius: 5px;
+border-radius: 5px;
+}

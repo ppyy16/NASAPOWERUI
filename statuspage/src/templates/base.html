@@ -1,0 +1,31 @@
+<!doctype html>
+{% load static %}
+
+<html>
+<head>
+
+<link href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="shortcut icon" href="{% static 'img/nasa.png' %}" />
+
+
+		<title>ASDC Status Page</title>
+		<img class = "logo" src="https://eosweb.larc.nasa.gov/sites/all/themes/asdc_omega/images/asdc_logo.png">
+		<div class='centerlogo'>
+			<div class="logotag">
+		<h1>ASDC Status Page</h1>
+		<p> Check the status of running services </p>
+	</div>
+	</div>
+
+	</head>
+	<body>
+		<div class="container">
+			  <div class="white-box">
+		{% block content %}
+		replace me
+		{% endblock %}
+	</div>
+</div>
+	</body>
+	</html>

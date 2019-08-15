@@ -1,0 +1,353 @@
+<!doctype html>
+{% load static %}
+
+
+<html>
+<head>
+
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/nasalogo.png'%}" />
+
+<link href="{% static 'css/home.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.12/"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
+<meta charset="utf-8">
+
+<title>POWER Data Select</title>
+</head>
+<body>
+
+{% block content %}
+
+
+{% endblock %}
+</body>
+
+
+
+<script>
+//map configuration
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/widgets/Search",
+      "esri/geometry/support/webMercatorUtils"
+    ], function(Map, MapView, Search) {
+
+      var map = new Map({
+        basemap: "topo-vector"
+      });
+
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [-118.71511,34.09042],
+        zoom: 11
+      });
+
+//search widget
+
+ var searchWidget = new Search({
+          view: view
+        });
+
+        // Add the search widget to the top right corner of the view
+        view.ui.add(searchWidget, {
+          position: "top-right"
+        });
+
+
+
+//coordinate widget
+ var coordsWidget = document.createElement("div");
+      coordsWidget.id = "coordsWidget";
+      coordsWidget.className = "esri-widget esri-component";
+      coordsWidget.style.padding = "7px 15px 5px";
+
+      view.ui.add(coordsWidget, "bottom-right");
+
+        //coordinate func
+      function showCoordinates(pt) {
+        var coords = "Lat/Lon " + pt.latitude.toFixed(3) + " " + pt.longitude.toFixed(3) +
+            " | Scale 1:" + Math.round(view.scale * 1) / 1 +
+            " | Zoom " + view.zoom;
+        coordsWidget.innerHTML = coords;
+      }
+
+       view.watch("stationary", function(isStationary) {
+        showCoordinates(view.center);
+      });
+
+      view.on("pointer-move", function(evt) {
+        showCoordinates(view.toMap({ x: evt.x, y: evt.y }));
+      });
+
+
+//onclick func for coordinates
+      view.on("click", function(evt){
+        //console.log(({ x: evt.x, y: evt.y }));
+
+        document.getElementById("latinput").setAttribute("value", view.toMap({ x: evt.x, y: evt.y }).latitude);
+        document.getElementById("longinput").setAttribute("value", view.toMap({ x: evt.x, y: evt.y }).longitude);
+
+
+      });
+
+
+      //search widget
+
+
+
+
+
+
+
+
+
+    });
+  </script>
+
+
+<script>
+//date field configuration
+//get todays date
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+ if(dd<10){
+        dd='0'+dd
+    } 
+    if(mm<10){
+        mm='0'+mm
+    } 
+
+today = yyyy+'-'+mm+'-'+dd;
+document.getElementById("datepicker").setAttribute("max", today);
+document.getElementById("datepicker").setAttribute("value", today);
+
+document.getElementById("datepickerafter").setAttribute("max", today);
+document.getElementById("datepickerafter").setAttribute("value", today);
+
+
+</script>
+
+
+
+
+
+<script>
+//on button click
+function buttonclick() {
+    //alert("clicked");
+   inputprint();
+   
+}
+
+//input gather
+function inputprint(){
+    var inputs, index, date;
+
+
+//the inputs from the form are here
+inputs = $("input:not(.check)")
+var chosen = [];
+for (i = 0; i < inputs.length; i++) { 
+    if (inputs[i].checked && inputs[i]){
+        //console.log((inputs[i]).value);
+        chosen.push(inputs[i]);
+    }
+}
+
+
+
+date = document.getElementsByClassName("datepicker");
+
+for (i=0; i < date.length; i++) {
+ // console.log(date[i].value);
+  chosen.push(date[i]);
+}
+
+latlong = document.getElementsByClassName("latlong");
+
+var chosen;
+for (i=0; i < latlong.length; i++) {
+  chosen.push(latlong[i]);
+}
+
+
+//after putting together the array of chosen objects
+/* or (i = 0; i < chosen.length; i++){
+  console.log(chosen[i].value);
+} */
+
+
+
+singlept(chosen);
+
+}
+
+
+//if all inputs in parameters unchecked, uncheck main box
+
+//fix min date and max date in terms of minimum
+
+
+//resizing
+
+
+//onclick singular etc.
+
+
+</script>
+
+
+<script>
+//onclick singular
+function singlept(chosen){
+
+  var base, temp= "request=execute&";
+
+base = "https://power.larc.nasa.gov/cgi-bin/v1/DataAccess.py?";
+
+var params = ["request", "identifier","startDate", "endDate", "userCommunity", "tempAverage", "lat", "lon", "user", "siteElev"];
+
+
+for (var i = 0; i < params.length; i++){
+
+  for (var z = 0; z < chosen.length; z++){
+    //console.log("params", params[i], (typeof params[i]));
+    //console.log("chosen", chosen[i].name, (typeof chosen[i].name));
+
+    var currentparameter = params[i];
+    var chosenname = chosen[z].name;
+
+    if (currentparameter === chosenname){
+     // console.log('true');
+      temp = (temp + currentparameter + '='+chosen[z].value + "&");
+    }
+ 
+  }
+}
+
+//outputlist
+temp = temp + 'outputList =';
+  for (var z = 0; z < chosen.length; z++){
+    if(chosen[z].name === 'outputList' ){
+      temp = temp + chosen[z].value + ',';
+    }
+
+  }
+
+  temp = temp.slice(0,-1);
+temp = temp + '&';
+
+
+
+//error catch
+var singlepointmax = 20;
+//lets configure the params here instead
+temp = temp + 'parameters =';
+  for (var z = 0; z < chosen.length; z++){
+    if(chosen[z].name === 'parameters' ){
+      temp = temp + chosen[z].value + ',';
+    }
+    if (z == singlepointmax) {
+      window.alert("You've selected too many parameters, your parameter limit is " + singlepointmax);
+      return;
+    }
+
+  }
+
+  //date error catch
+  if (document.getElementById("datepicker").value > document.getElementById("datepickerafter").value) {
+    window.alert("Your start date cannot be after your end date.");
+    return;
+  }
+
+
+
+//str = str.slice(0, -1);
+temp = temp.slice(0,-1);
+temp = temp + '&';
+temp = temp.toString().replace(/-|\s/g,"");
+base = base + temp + "user=anonymous";
+//console.log(base);
+window.open(base);
+}
+
+
+</script>
+
+
+<script>
+//collapsible code
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+</script>
+
+<script>
+function divShow() {
+  //onclick proper fields
+  
+    var x = document.getElementById('singlepoint');
+    var y = document.getElementById('singlepointmax');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+        y.style.display = 'inline-block';
+    } 
+    else {
+        x.style.display = 'none';
+         y.style.display = 'none';
+    }
+
+
+
+}
+</script>
+
+
+
+{% comment %} collapsibles check {% endcomment %}
+
+<script>
+$('input.check[type=checkbox]').click(function() {
+
+    $(this).parent().next().find(':checkbox').prop('checked', false);                     
+});
+
+
+
+</script>
+
+<script>
+
+
+
+</script>
+</html>
+
+
+
+
+
+
+

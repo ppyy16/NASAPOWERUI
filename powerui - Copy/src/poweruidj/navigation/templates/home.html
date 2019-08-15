@@ -1,0 +1,138 @@
+{% extends 'homebase.html' %}
+
+{% load static %}
+
+{% block content %}
+<div id="viewDiv"></div>
+
+
+<div class="rectangle"> 
+    <div class="smallcover">
+        <div class="logo"> <img src="{% static 'img/nasalogo.png'%}" alt=""></div> 
+        <p>Power Data Access</p>
+   
+        <div class="buttonsmenu"> 
+        <button class="layersbttn"> <img src="{% static 'img/layersbtn.png'%}" class="layerbuttonimage" alt="" width="40" height="40"></button>
+        <button class="layersbttn"> <img src="{% static 'img/databtn.png'%}" class="layerbuttonimage" alt="" width="40" height="40"></button>
+
+        </div> 
+    </div>
+    <br>
+    {% comment %} below the header title black rectanlge {% endcomment %}
+    <div class="smallrectangle">
+    <div class="requeststart">
+    <p class='headerone'>User Community</p>
+    <form action="/action_page.php" id=submitform>
+  <input type="radio" name="userCommunity" value="SSE"> SSE-Renewable Energy<br>
+  <input type="radio" name="userCommunity" value="SB"> Sustainable Buildings<br>
+  <input type="radio" name="userCommunity" value="AG"> Agroclimatology<br>  
+   <p>Temporal Average</p>
+  <input type="radio" name="tempAverage" value="DAILY"> Daily<br>
+  <input type="radio" name="tempAverage" value="INTERANNUAL"> Interannual<br>
+  <input type="radio" name="tempAverage" value="CLIMATOLOGY"> Climatology<br> 
+<p>Latitude/Longitude</p>
+  <input type="radio" id='Regional' name="identifier" value="Regional"> Regional Latitude<br>
+  <input type="radio" id= 'Global' name="identifier" value="Global"> Global Download<br>
+  <input type="radio" id = 'SinglePoint' name="identifier" value="SinglePoint" onclick="divShow()"> Singular Point Latitude<br> 
+
+
+
+
+<div id="singlepoint" style="display: none;">
+  Latitude: <input size=200px type="number" name= "lat"class="latlong" id="latinput"value=""><br>
+  Longitude: <input size= 200px type="number" name= "lon" class= "latlong" id="longinput" value=""><br>
+
+
+</div>
+
+
+
+
+
+<p>Time Range</p>
+<input type="date" id="datepicker" name="startDate" class= "datepicker" value="2018-08-06" min="1970-08-06" max="2018-08-20"> <br>
+<input type="date" id="datepickerafter" name="endDate" class= "datepicker" value="2018-08-06" min="1970-08-06" max="2018-08-20"> <small>MM/DD/YY</small>
+
+<div class='paramaxdiv'>
+<div class="paramax" id="paramax">Parameter max: <div class="singlepointmax" id="singlepointmax" style="display: none;">20</div><div class="globalmax"style="display: none;">3</div><div class="regionalmax" style="display: none">20</div></div>
+</div>
+<p>Parameters</p>
+<div id="menu">
+<div id="button" href="#" class="collapsible"><input type="checkbox" class="check" checked> Meteorology (Moisture and other)</div>
+<div class="content">
+  <input type="checkbox" name="parameters" value="PRECTOT" checked> Precipitation<br>
+<input type="checkbox" name="parameters" value="QV2M" checked> Specific Humidity at 2 Meters<br>
+<input type="checkbox" name="parameters" value="RH2M" checked> Relative Humidity at 2 Meters<br>
+<input type="checkbox" name="parameters" value="PS" checked> Surface Pressure<br>
+</div>
+<div id="button" href="#" class="collapsible"><input type="checkbox" class="check" checked> Meteorology (Temperature)</div>
+<div class="content">
+  <input type="checkbox" name="parameters" value="T2M_RANGE" checked> Temperature Rage at 2 Meters<br>
+   <input type="checkbox" name="parameters" value="TS" checked> Earth Skin Temperature<br>
+    <input type="checkbox" name="parameters" value="T2MDEW" checked> Dew/Frost Point at 2 Meters<br>
+    <input type="checkbox" name="parameters" value="T2MWET" checked> Wet Bulb Temperature at 2 Meters<br>
+    <input type="checkbox" name="parameters" value="T2M_MAX" checked> Maximum Temperature at 2 Meters<br>
+    <input type="checkbox" name="parameters" value="T2M_MIN" checked> Minimum Temperature at 2 Meters<br>
+    <input type="checkbox" name="parameters" value="T2M" checked> Temperature at 2 Meters<br>
+
+</div>
+<div id="button" href="#" class="collapsible"><input type="checkbox" class="check" checked> Meteorology (Wind)</div>
+
+<div class="content">
+    <input type="checkbox" name="parameters" value="WS50M_RANGE" checked> Wind Speed Range at 50 Meters<br>
+    <input type="checkbox" name="parameters" value="WS10M_RANGE" checked> Wind Speed Range at 10 Meters<br>
+    <input type="checkbox" name="parameters" value="WS50M_MIN" checked> Minimum Wind Speed at 50 Meters<br>
+    <input type="checkbox" name="parameters" value="WS10M_MIN" checked> Minimum Wind Speed at 10 Meters<br>
+    <input type="checkbox" name="parameters" value="WS50M_MAX" checked> Maximum Wind Speed at 50 Meters<br>
+    <input type="checkbox" name="parameters" value="WS10M_MAX" checked> Maximum Wind Speed at 10 Meters<br>
+    <input type="checkbox" name="parameters" value="WD50M" checked> Wind Direction at 50 Meters (Meteorological Convention)<br>
+    <input type="checkbox" name="parameters" value="WD10M" checked> Wind Direction at 10 Meters (Meteorological Convention)<br>
+    <input type="checkbox" name="parameters" value="WS50Ms" checked> Wind Speed at 50 Meter<br>
+    <input type="checkbox" name="parameters" value="WS10Ms" checked> Wind Speed at 10 Meter<br>
+</div>
+<div id="button" href="#" class="collapsible"><input type="checkbox" class="check" checked> Sizing and Pointing of Solar Panels/Solar Thermal Application</div>
+
+<div class="content">
+  <input type="checkbox" name="parameters" value="KT_CLEAR" checked> Clear Sky Insolation Clearness Index<br>
+  <input type="checkbox" name="parameters" value="KT" checked> Insolation Clearness Index<br>
+  <input type="checkbox" name="parameters" value="CLRSKY_SFC_SW_DWN" checked> Clear Sky Insolation Clearness Incident of a Horizontal Surface<br>
+  <input type="checkbox" name="parameters" value="ALLSKY_SFC_SW_DWN" checked> All Sky Insolation Clearness Incident of a Horizontal Surface<br>
+</div>
+<div id="button" href="#" class="collapsible"><input type="checkbox" class="check" checked> Solar Cooking</div>
+<div class="content">
+    <input type="checkbox" name="parameters" value="CLRSKY_SFC_SW_DWN" checked> Clear Sky Insolation Incident on a Horizontal Surface<br>
+    <input type="checkbox" name="parameters" value="ALLSKY_SFC_SW_DWN" checked> All Sky Insolation Incident on a Horizontal Surface<br>
+
+</div>
+<div id="button" href="#" class="collapsible"><input type="checkbox" class="check" checked> Solar Irradiance & Related Parameters</div>
+
+<div class="content">
+      <input type="checkbox" name="parameters" value="ALLSKY_SFC_LW_DWN" checked> Downward Thermal Infrared (Longwave) Radiative Flux<br>
+</div>
+<div id="button" href="#" class="collapsible"><input type="checkbox" class="check" checked> Tilted Solar Panels</div>
+
+<div class="content">
+    <input type="checkbox" name="parameters" value="KT" checked> Insolation Clearness Index<br>
+
+</div>
+</div>
+
+<p>Output Format</p>
+  <input type="checkbox" name="outputList" value="ASCII">ASCII 
+  <input type="checkbox" name="outputList" value="CSV"> CSV 
+<input type="checkbox" name="outputList" value="GeoJSON"> GeoJSON
+    <input type="checkbox" name="outputList" value="NetCDF"> NetCDF<br> 
+
+
+<br>
+<div id= demo></div>
+<button type="button" class="btn btn-dark" id= "submitbutton" onclick="buttonclick()">submit</button>
+</form>
+{% comment %} small rectangle div end {% endcomment %}
+</div>
+</div>
+</div>
+</div>
+
+
+{% endblock %}
